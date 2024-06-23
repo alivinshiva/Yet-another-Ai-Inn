@@ -2,6 +2,7 @@ import Image from "next/image";
 import logo from '@/Images/applogo.png'
 import { Button } from "@/components/ui/button";
 import Link from 'next/link'
+import Writer from "@/components/Writer";
 
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
         </div>
 
         {/* Writer  */}
+        <Writer/>
 
       </section>
     </main>
