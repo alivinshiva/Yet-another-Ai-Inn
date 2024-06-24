@@ -1,5 +1,5 @@
 "use client"
-import React, { use, useState } from 'react'
+import React, { useState } from 'react'
 import { Textarea } from './ui/textarea'
 import {
     Select,
@@ -9,14 +9,9 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Button } from './ui/button'
-import path from 'path'
-import { error, log } from 'console'
-import { comma } from 'postcss/lib/list'
-import { Frame } from '@gptscript-ai/gptscript'
-
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const storiesPath = 'public/stories';
-
 
 function Writer() {
     const [story, setStory] = useState<string>("");
@@ -25,78 +20,65 @@ function Writer() {
     const [runStarted, setRunStarted] = useState<boolean>(false);
     const [runFinished, setRunFinished] = useState<boolean | null>(null);
     const [currentTool, setCurrentTool] = useState("")
-    const [events, setEvents] = useState<Frame[]>([])
-
+    const [response, setResponse] = useState<string>(""); // New state for storing the response
+    const [error, setError] = useState<string>(''); // New state for storing errors
 
     async function runScript() {
         setRunStarted(true)
         setRunFinished(false)
+        setProgress("AI Storyteller has started...");
+        const apiKey = "AIzaSyA4jIx7py8MtdJBQUoO9J1yarn68dlcq18";
+        const genAI = new GoogleGenerativeAI(apiKey);
 
-        const response = await fetch('/api/run-script', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify({ story, pages, path: storiesPath })
+        const model = genAI.getGenerativeModel({
+            model: 'gemini-1.5-flash-001',
         });
 
-        if (response.ok && response.body) {
-            // handle stream from api
-            // ...
-            console.log("streaming started");
+        const generationConfig = {
+            temperature: 1,
+            topP: 0.95,
+            topK: 64,
+            maxOutputTokens: 8192,
+            responseMimeType: 'text/plain',
+        };
 
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
+        try {
+            const chatSession = model.startChat({
+                generationConfig,
+                history: [
+                    {
+                        role: 'user',
+                        parts: [
+                            {
+                                text: `Description: Writes a children's book based on a ${story} or a complete story.
+                                Steps:1. If the story is inappropriate for children, abort the process and cite the reason why.2. Come up with an appropriate title for the story based on the story. 3. If the story is a prompt and not a complete children's story, generate a story based on the prompt.
 
-            handleStream(reader, decoder)
+                                    You are an accomplished children's story writer. You like to write with a style that is appropriate for children butbis still interesting to read. With your style, write a story based on ${story} that has ${pages} pages. Along with the story, write an extensive description of each character's physical appearance. Be sure to include things like hairncolor, skin tone, hair style, species, and any other signiciant characteristics. Write an extensive description of what settings in the story look like as well. Finally, determine what should be tha title of story If the ${story} provides one, use that.`,
+                            },
+                        ],
+                    },
+                ],
+            });
 
-
-        } else {
+            const result = await chatSession.sendMessage('Generate response');
+            const generatedResponse = await result.response.text();
+            setResponse(generatedResponse);
             setRunFinished(true);
-            setRunStarted(false);
-            console.error("Failed to start streaming")
-
+            setProgress("Story generation completed.");
+        } catch (err) {
+            setError('Error generating response. Please try again.');
+            console.error('Error generating response:', err);
+            setRunFinished(false);
         }
     }
-    async function handleStream(reader: ReadableStreamDefaultReader<Uint8Array>, decoder: TextDecoder) {
-        // manage the stream
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            // it decode Unit8 into string 
-            const chunk = decoder.decode(value, { stream: true });
-
-            // manage chunk
-            const eventData = chunk
-                .split("\n\n")
-                .filter((line) => line.startsWith("event:"))
-                .map((line) => line.replace(/^event: /, ""))
-
-            eventData.forEach(data => {
-                try {
-                    const parsedData = JSON.parse(data)
-                    if (parsedData.type === "callProgress") {
-                        setProgress(
-                            parsedData.output[parsedData.output.length - 1].Content
-                        )
-                        setCurrentTool(parsedData.tool?.descriptions || "")
-                    } else if (parsedData.type === "callStart") {
-                        setCurrentTool(parsedData.tool?.descriptions || "")
-
-                    } else if (parsedData.type === "runFinish") {
-                        setRunFinished(true);
-                        setRunStarted(false);
-                    } else {
-                        setEvents((prevEvents) => [...prevEvents, parsedData])
-                    }
-                } catch (error) {
-                    console.error("failed to parse JSON", error)
-
-                }
-            })
 
 
-        }
+    function copyToClipboard() {
+        navigator.clipboard.writeText(response).then(() => {
+            console.log('Story copied to clipboard');
+        }).catch(err => {
+            console.error('Failed to copy story:', err);
+        });
     }
 
     return (
@@ -108,9 +90,8 @@ function Writer() {
                     className='flex-1 text-black' placeholder='Write a story of human and robot who become friends...' />
 
                 <Select onValueChange={value => setPages(parseInt(value))}>
-
                     <SelectTrigger>
-                        <SelectValue placeholder="Number of page" />
+                        <SelectValue placeholder="Number of pages" />
                     </SelectTrigger>
                     <SelectContent className='w-full'>
                         {Array.from({ length: 10 }, (_, i) => (
@@ -125,43 +106,55 @@ function Writer() {
                     Generate Story
                 </Button>
             </section>
-            <section className='flex-1 pb-5 mt-5'>
 
+            <section className='flex-1 pb-5 mt-5'>
+                {/* Generated story section */}
                 <div className='flex flex-col-reverse w-full space-y-2 bg-gray-800 rounded-md text-gray-200 font-mono p-10 h-96 overflow-y-auto'>
                     <div>
                         {runFinished === null && (
                             <>
-                                <p className='animate-pulse mr-5'>Im waiting... </p>
+                                <p className='animate-pulse mr-5'>I'm waiting... 😒 </p>
                                 <br />
                             </>
                         )}
-
                         <span className='mr-5'>{'>>>'}</span>
                         {progress}
                     </div>
-                    {/* tools */}
+
+                    {/* Render generated response */}
+                    {response && (
+                        <div className='py-10'>
+                            <span className='mr-5'>{"--- [Generated Story] ---"}</span>
+                            <div>{response}</div>
+                            <div className='flex space-x-2 mt-4'>
+                                <Button className='w-full' size='lg' onClick={copyToClipboard}>Copy to Clipboard</Button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Tools */}
                     {currentTool && (
                         <div className='py-10'>
-                            <span className='mr-5'>{"--- [Current Tool]---"}</span>
-
+                            <span className='mr-5'>{"--- [Current Tool] ---"}</span>
                             {currentTool}
                         </div>
                     )}
+
+                    {/* Render events */}
+                    <div className='space-y-5'>
+                        {/* Add events rendering logic here if needed */}
+                    </div>
+
                     {runStarted && (
                         <div>
-                            <span className='mr-5 animate-in'>{"--- [AI Storyteller Has Started]---"}</span>
-
-
-
+                            <span className='mr-5 animate-in'>{"--- [Please wait] ---"}</span>
                         </div>
                     )}
                 </div>
 
             </section>
-
-
         </div>
     )
 }
 
-export default Writer
+export default Writer;
