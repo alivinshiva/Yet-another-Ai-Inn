@@ -27,7 +27,8 @@ function Writer() {
         setRunStarted(true)
         setRunFinished(false)
         setProgress("AI Storyteller has started...");
-        const apiKey = "AIzaSyA4jIx7py8MtdJBQUoO9J1yarn68dlcq18";
+        const apiKey = 
+        ;
         const genAI = new GoogleGenerativeAI(apiKey);
 
         const model = genAI.getGenerativeModel({
@@ -65,12 +66,36 @@ function Writer() {
             setResponse(generatedResponse);
             setRunFinished(true);
             setProgress("Story generation completed.");
+            saveStory(generatedResponse, "Generated Story Title");
         } catch (err) {
             setError('Error generating response. Please try again.');
             console.error('Error generating response:', err);
             setRunFinished(false);
         }
     }
+
+
+    // save story
+    async function saveStory(story: string, title: string) {
+        try {
+            const response = await fetch('/api/saveStory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ story, title }),
+            });
+
+            if (response.ok) {
+                console.log('Story saved successfully');
+            } else {
+                console.error('Failed to save story');
+            }
+        } catch (error) {
+            console.error('Error saving story:', error);
+        }
+    }
+
 
 
     function copyToClipboard() {
