@@ -11,7 +11,6 @@ import {
 import { Button } from './ui/button'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const storiesPath = 'public/stories';
 
 function Writer() {
     const [story, setStory] = useState<string>("");
@@ -27,8 +26,6 @@ function Writer() {
         setRunStarted(true)
         setRunFinished(false)
         setProgress("AI Storyteller has started...");
-        const apiKey = 
-        ;
         const genAI = new GoogleGenerativeAI(apiKey);
 
         const model = genAI.getGenerativeModel({
@@ -51,10 +48,7 @@ function Writer() {
                         role: 'user',
                         parts: [
                             {
-                                text: `Description: Writes a children's book based on a ${story} or a complete story.
-                                Steps:1. If the story is inappropriate for children, abort the process and cite the reason why.2. Come up with an appropriate title for the story based on the story. 3. If the story is a prompt and not a complete children's story, generate a story based on the prompt.
-
-                                    You are an accomplished children's story writer. You like to write with a style that is appropriate for children butbis still interesting to read. With your style, write a story based on ${story} that has ${pages} pages. Along with the story, write an extensive description of each character's physical appearance. Be sure to include things like hairncolor, skin tone, hair style, species, and any other signiciant characteristics. Write an extensive description of what settings in the story look like as well. Finally, determine what should be tha title of story If the ${story} provides one, use that.`,
+                                text: `Description: Writes a children's book based on a ${story} or a complete story. Steps:1. If the story is inappropriate for children, abort the process. 2. Come up with an appropriate title for the story based on the story. 3. If the story is a prompt and not a complete children's story, generate a story based on the prompt. You are an accomplished children's story writer. You like to write with a style that is appropriate for children butbis still interesting to read. With your style, write a story based on ${story} that has ${pages} pages. Along with the story, write an extensive description of each character's physical appearance. Be sure to include things like hairncolor, skin tone, hair style, species, and any other signiciant characteristics. Write an extensive description of what settings in the story look like as well. Finally, determine what should be tha title of story If the ${story} provides one, use that.`,
                             },
                         ],
                     },
@@ -66,7 +60,7 @@ function Writer() {
             setResponse(generatedResponse);
             setRunFinished(true);
             setProgress("Story generation completed.");
-            saveStory(generatedResponse, "Generated Story Title");
+            await saveStory(generatedResponse, "Generated Story Title");
         } catch (err) {
             setError('Error generating response. Please try again.');
             console.error('Error generating response:', err);
@@ -74,27 +68,27 @@ function Writer() {
         }
     }
 
+            // save story 
 
-    // save story
     async function saveStory(story: string, title: string) {
         try {
-            const response = await fetch('/api/saveStory', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ story, title }),
-            });
-
-            if (response.ok) {
-                console.log('Story saved successfully');
-            } else {
-                console.error('Failed to save story');
-            }
+          const response = await fetch('/api/saveStory', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ story, title }),
+          });
+    
+          if (response.ok) {
+            console.log('Story saved successfully');
+          } else {
+            console.error('Failed to save story');
+          }
         } catch (error) {
-            console.error('Error saving story:', error);
+          console.error('Error saving story:', error);
         }
-    }
+      }
 
 
 
