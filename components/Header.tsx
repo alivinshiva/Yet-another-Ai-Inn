@@ -25,7 +25,7 @@ function header() {
                     />
                 </Link>
 
-                <Link href='/stories'>
+                <Link href='/Stories'>
                     <BookOpen
                         className='w-8 h-8 lg:w-10 mx-auto text-purple-500 mt-10 border border-purple-500 p-2 rounded-md hover:opacity-50 cursor-pointer'
                     />

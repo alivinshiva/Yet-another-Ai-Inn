@@ -67,6 +67,8 @@ function Writer() {
             setResponse(generatedResponse);
             setRunFinished(true);
             setProgress("Story generation completed.");
+
+            // auto save story 
             // await saveStory(generatedResponse, "Generated Story Title");
         } catch (err) {
             setError('Error generating response. Please try again.');
@@ -180,6 +182,9 @@ function Writer() {
                             <div className='flex space-x-2 mt-4'>
                                 <Button className='w-full' size='lg' onClick={copyToClipboard}>Copy to Clipboard</Button>
                                 <Button className='w-full' size='lg' onClick={saveStoryButton}>Save Story</Button>
+                                <Button disabled={!pages || !story}  className='w-full' size='lg' onClick={runScript}>
+                                    Re-Generate Story
+                                </Button>
 
                             </div>
                         </div>
