@@ -16,9 +16,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { story, title }: Story = req.body;
+  
 
-  const filePath = path.join(storiesPath, `${title}.txt`);
+  const { story, title }: Story = req.body;
+  // const uniqueTitle = `${new Date().toISOString()}`;
+
+  const filePath = path.join(storiesPath,`${title}.txt`);
   fs.writeFileSync(filePath, story);
 
   res.status(201).json({ message: 'Story saved successfully' });

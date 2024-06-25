@@ -9,8 +9,15 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Button } from './ui/button'
-import { GoogleGenerativeAI } from '@google/generative-ai'
 
+
+import { GoogleGenerativeAI } from '@google/generative-ai'
+import { title } from 'process'
+
+// import path from 'path';
+
+
+const storiesPath = 'public/stories';
 
 function Writer() {
     const [story, setStory] = useState<string>("");
@@ -60,7 +67,7 @@ function Writer() {
             setResponse(generatedResponse);
             setRunFinished(true);
             setProgress("Story generation completed.");
-            await saveStory(generatedResponse, "Generated Story Title");
+            // await saveStory(generatedResponse, "Generated Story Title");
         } catch (err) {
             setError('Error generating response. Please try again.');
             console.error('Error generating response:', err);
@@ -68,27 +75,52 @@ function Writer() {
         }
     }
 
-            // save story 
+
+    // extract title from response
+    function extractTitle(text: string): string | null {
+        const titlePattern = /^##\s*(.*?)\s*$/m;
+        const match = text.match(titlePattern);
+        return match ? match[1] : null;
+    }
+    const storyTitle = extractTitle(response);
+    // console.log(title); // Output: "The Littlest Superhero"
+
+
+
+    // save story 
 
     async function saveStory(story: string, title: string) {
         try {
-          const response = await fetch('/api/saveStory', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ story, title }),
-          });
-    
-          if (response.ok) {
-            console.log('Story saved successfully');
-          } else {
-            console.error('Failed to save story');
-          }
+            const response = await fetch('/api/saveStory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ story, title }),
+            });
+
+
+            if (response.ok) {
+                console.log('Story saved successfully');
+            } else {
+                console.error('Failed to save story');
+            }
         } catch (error) {
-          console.error('Error saving story:', error);
+            console.error('Error saving story:', error);
         }
-      }
+    }
+
+
+    async function saveStoryButton() {
+        if (response) {
+            const title = `${storyTitle}`;
+            await saveStory(response, title);
+            setProgress("Story saved successfully!");
+        } else {
+            setProgress("No story to save.");
+        }
+    }
+
 
 
 
@@ -147,6 +179,8 @@ function Writer() {
                             <div>{response}</div>
                             <div className='flex space-x-2 mt-4'>
                                 <Button className='w-full' size='lg' onClick={copyToClipboard}>Copy to Clipboard</Button>
+                                <Button className='w-full' size='lg' onClick={saveStoryButton}>Save Story</Button>
+
                             </div>
                         </div>
                     )}
