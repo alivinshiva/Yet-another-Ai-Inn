@@ -33,6 +33,7 @@ function Writer() {
         setRunStarted(true)
         setRunFinished(false)
         setProgress("AI Storyteller has started...");
+        const apiKey = "AIzaSyA4jIx7py8MtdJBQUoO9J1yarn68dlcq18";
         const genAI = new GoogleGenerativeAI(apiKey);
 
         const model = genAI.getGenerativeModel({
