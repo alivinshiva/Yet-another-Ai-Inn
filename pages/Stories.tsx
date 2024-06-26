@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import cleanTitle from "@/lib/cleanTitle";
 import { title } from 'process';
+import Link from 'next/link';
 
 interface Story {
   title: string;
@@ -39,10 +40,12 @@ const Stories: React.FC = () => {
             const storyContent = story.content.slice(contentStartIndex, contentStartIndex + 100);
 
             return (
-              <div key={index} className="border rounded-lg p-4 shadow-md">
+              <Link href={`/story/${cleanTitle(story.title)}`} key={index}>
+              <div key={index} className="border rounded-lg p-4 cursor-pointer shadow-md">
                 <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
                 <p className="text-gray-700">{storyContent}...</p>
               </div>
+              </Link>
             );
           })
         )}
