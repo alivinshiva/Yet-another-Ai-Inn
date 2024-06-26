@@ -73,4 +73,12 @@
     body {
       @apply bg-background text-foreground;
     }
+    .first-letter {
+      font-weight: bold;
+      font-size: 1.5em; /* Adjust as needed */
+    }
+  }
+  .first-letter {
+    font-weight: bold;
+    font-size: 1.5em; /* Adjust as needed */
   }

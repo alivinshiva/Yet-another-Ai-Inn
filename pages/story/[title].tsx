@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import cleanTitle from "@/lib/cleanTitle";
+import formatStoryContent from "@/lib/formatStoryContent";
 
 interface Story {
     title: string;
@@ -23,6 +24,7 @@ const StoryDetail: React.FC = () => {
                             ...story,
                             title: cleanTitle(story.title),
                             content: cleanTitle(story.content),
+                            // content: formatStoryContent(cleanTitle(story.content)),
                         });
                     }
                 })
@@ -37,12 +39,15 @@ const StoryDetail: React.FC = () => {
     }
     const contentStartIndex = story.content.indexOf(story.title) + story.title.length;
     const storyContent = story.content.slice(contentStartIndex);
+    const finalStory= formatStoryContent(storyContent)
+
     return (
         <main className="flex flex-col items-center justify-center min-h-screen p-8 bg-gray-100">
             <article className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
                 <h1 className="text-4xl font-bold mb-8">{story.title}</h1>
 
-                <p className="text-gray-700 whitespace-pre-line">{storyContent}</p>
+                {/* <p className="text-gray-700 whitespace-pre-line">{storyContent}</p> */}
+                <p className="text-gray-700 whitespace-pre-line" dangerouslySetInnerHTML={{ __html: finalStory }}></p>
             </article>
         </main>
     );
