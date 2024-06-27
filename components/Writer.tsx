@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Textarea } from './ui/textarea'
 import {
     Select,
@@ -13,6 +13,8 @@ import { Button } from './ui/button'
 
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { title } from 'process'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 // import path from 'path';
 
@@ -28,6 +30,7 @@ function Writer() {
     const [currentTool, setCurrentTool] = useState("")
     const [response, setResponse] = useState<string>(""); // New state for storing the response
     const [error, setError] = useState<string>(''); // New state for storing errors
+    const router = useRouter()
 
     async function runScript() {
         setRunStarted(true)
@@ -113,18 +116,34 @@ function Writer() {
     }
 
 
+    // auto save tost 
+    // useEffect(() => {
+    //     if (runFinished) {
+    //         toast.success("story generated successfully", {
+    //             action: (
+    //                 <Button onClick={() => router.push("/Stories")}
+    //                     className='bg-purple-500 ml-auto'>  View Stories </Button>
+    //             )
+    //         })
+    //     }
+    // }, [runFinished])
+
+
     async function saveStoryButton() {
         if (response) {
             const title = `${storyTitle}`;
             await saveStory(response, title);
             setProgress("Story saved successfully!");
+            toast.success("story generated successfully", {
+                action: (
+                    <Button onClick={() => router.push("/Stories")}
+                        className='bg-purple-500 ml-auto'>  View Stories </Button>
+                )
+            })
         } else {
             setProgress("No story to save.");
         }
     }
-
-
-
 
     function copyToClipboard() {
         navigator.clipboard.writeText(response).then(() => {
@@ -133,6 +152,7 @@ function Writer() {
             console.error('Failed to copy story:', err);
         });
     }
+
 
     return (
         <div className='flex flex-col container'>
@@ -182,7 +202,7 @@ function Writer() {
                             <div className='flex space-x-2 mt-4'>
                                 <Button className='w-full' size='lg' onClick={copyToClipboard}>Copy to Clipboard</Button>
                                 <Button className='w-full' size='lg' onClick={saveStoryButton}>Save Story</Button>
-                                <Button disabled={!pages || !story}  className='w-full' size='lg' onClick={runScript}>
+                                <Button disabled={!pages || !story} className='w-full' size='lg' onClick={runScript}>
                                     Re-Generate Story
                                 </Button>
 

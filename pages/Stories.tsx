@@ -48,7 +48,8 @@ const Stories: React.FC = () => {
     <main className="flex-1 flex flex-col p-8">
       {/* <h1 className="text-3xl font-bold mb-8">Stories</h1> */}
       <div className="flex justify-between items-center relative">
-        <h1 className="text-3xl font-bold mb-8">Stories</h1>
+        <h1 className="text-3xl font-bold mb-8">Story Library
+        </h1>
         <p className="absolute flex items-center top-0 right-0 bg-purple-500 text-white font-bold p-3 rounded-lg m-2 text-1xl"><BookOpenText className='w-8 h-8 mr-1' />{storyCount === 1 ? `${storyCount} Story` : `${storyCount} Stories`}</p>
       </div>
       {stories.length === 0 ? (

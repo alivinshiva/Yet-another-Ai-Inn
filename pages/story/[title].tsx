@@ -46,8 +46,8 @@ const StoryDetail: React.FC = () => {
             <article className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
                 <h1 className="text-4xl font-bold mb-8">{story.title}</h1>
 
-                {/* <p className="text-gray-700 whitespace-pre-line">{storyContent}</p> */}
-                <p className="text-gray-700 whitespace-pre-line" dangerouslySetInnerHTML={{ __html: finalStory }}></p>
+                {/* <p className="text-gray-700 whitespace-pre-wrap first-letter:text-3xl font-mono font-semibold text-xl">{storyContent}</p> */}
+                <p className="text-gray-700 whitespace-pre-wrap font-mono font-semibold text-xl" dangerouslySetInnerHTML={{ __html: finalStory }}></p>
             </article>
         </main>
     );

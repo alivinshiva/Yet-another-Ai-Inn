@@ -79,6 +79,7 @@
     }
   }
   .first-letter {
-    font-weight: bold;
-    font-size: 1.5em; /* Adjust as needed */
+    font-size: 2.075rem /* 30px */;
+    line-height: 2.25rem ;
+    color: rgb(126 34 206 / var(--tw-bg-opacity))
   }
