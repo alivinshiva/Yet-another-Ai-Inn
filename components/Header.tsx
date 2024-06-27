@@ -17,6 +17,8 @@ function header() {
                 </div>
             </Link>
 
+            <p className="text-xl text-gray-500 mt-2">This site is in development. Please pardon our dust!</p>
+
             {/* Icons */}
             <div className=' absolute -top-5 right-5 flex space-x-2'>
                 <Link href='/'>
