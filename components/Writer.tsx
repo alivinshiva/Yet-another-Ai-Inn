@@ -187,7 +187,7 @@ function Writer() {
                     <div>
                         {runFinished === null && (
                             <>
-                                <p className='animate-pulse mr-5'>I'm waiting... 😒 </p>
+                                 <p className='animate-pulse mr-5'>I&apos;m waiting... 😒 </p>
                                 <br />
                             </>
                         )}
