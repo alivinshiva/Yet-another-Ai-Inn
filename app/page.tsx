@@ -3,8 +3,7 @@ import logo from '@/Images/applogo.png'
 import { Button } from "@/components/ui/button";
 import Link from 'next/link'
 import Writer from "@/components/Writer";
-import Header from "@/components/Header";
-
+import Footer from "@/components/Footer";
 
 
 export default function Home() {
@@ -22,6 +21,7 @@ export default function Home() {
         {/* Writer  */}
         <Writer />
       </section>
+        <Footer/>
     </main>
 
   );
