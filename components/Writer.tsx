@@ -11,12 +11,14 @@ import {
 import { Button } from './ui/button'
 
 
+
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { title } from 'process'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
 // import path from 'path';
+
 
 
 const storiesPath = 'public/stories';
@@ -36,7 +38,7 @@ function Writer() {
         setRunStarted(true)
         setRunFinished(false)
         setProgress("AI Storyteller has started...");
-        const apiKey = process.env.GENAI_API_KEY!;
+        const apiKey = process.env.NEXT_PUBLIC_API as string;
         const genAI = new GoogleGenerativeAI(apiKey);
 
         const model = genAI.getGenerativeModel({
