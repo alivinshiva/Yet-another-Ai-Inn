@@ -198,7 +198,7 @@ function Writer() {
                     {/* Render generated response */}
                     {response && (
                         <div className='py-10'>
-                            <span className='mr-5'>{"--- [Generated Story] ---"}</span>
+                            <span className='mr-5'>{`--- [Generated Story] ---`}</span>
                             <div>{response}</div>
                             <div className='flex space-x-2 mt-4'>
                                 <Button className='w-full' size='lg' onClick={copyToClipboard}>Copy to Clipboard</Button>
@@ -214,7 +214,7 @@ function Writer() {
                     {/* Tools */}
                     {currentTool && (
                         <div className='py-10'>
-                            <span className='mr-5'>{"--- [Current Tool] ---"}</span>
+                            <span className='mr-5'>{`--- [Current Tool] ---`}</span>
                             {currentTool}
                         </div>
                     )}
@@ -226,7 +226,7 @@ function Writer() {
 
                     {runStarted && (
                         <div>
-                            <span className='mr-5 animate-in'>{"--- [Please wait] ---"}</span>
+                            <span className='mr-5 animate-in'>{`--- [Please wait] ---`}</span>
                         </div>
                     )}
                 </div>
