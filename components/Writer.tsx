@@ -22,10 +22,12 @@ import { useRouter } from 'next/navigation'
 
 
 const storiesPath = 'public/stories';
+const languages = ['Hindi', 'English', 'Spanish', 'French', 'German', 'Italian'];
 
 function Writer() {
     const [story, setStory] = useState<string>("");
     const [pages, setPages] = useState<number>();
+    const [language, setLanguage] = useState<string>("");
     const [progress, setProgress] = useState("");
     const [runStarted, setRunStarted] = useState<boolean>(false);
     const [runFinished, setRunFinished] = useState<boolean | null>(null);
@@ -61,7 +63,7 @@ function Writer() {
                         role: 'user',
                         parts: [
                             {
-                                text: `Description: Writes a children's book based on a ${story} or a complete story, use easy and simple language that can easly understand by children. Steps:1. Come up with an appropriate title for the story based on the story. 2. If the story is a prompt and not a complete children's story, generate a story based on the prompt. You are an accomplished children's story writer. You like to write with a style that is appropriate for children butbis still interesting to read. With your style, write a story based on ${story} that has ${pages} pages. Along with the story, write an extensive description of each character's physical appearance.and do not mark page number in between `,
+                                text: `Description: Writes a children's book based on a ${story} and ${language} or a complete story, use easy and simple language that can easly understand by children. Steps:1. Come up with an appropriate title for the story based on the story. 2. If the story is a prompt and not a complete children's story, generate a story based on the prompt. You are an accomplished children's story writer. You like to write with a style that is appropriate for children butbis still interesting to read. With your style, write a story based on ${story} and write it in ${language} that has ${pages} pages. Along with the story, write an extensive description of each character's physical appearance.and do not mark page number in between `,
                             },
                         ],
                     },
@@ -178,7 +180,23 @@ function Writer() {
                     </SelectContent>
                 </Select>
 
-                <Button disabled={!pages || !story || runStarted} className='w-full' size='lg' onClick={runScript}>
+
+                <Select onValueChange={value => setLanguage(value)}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select Language" />
+                    </SelectTrigger>
+                    <SelectContent className='w-full'>
+                        {languages.map((language, index) => (
+                            <SelectItem key={index} value={language}>
+                                {language}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+
+
+
+                <Button disabled={!pages || !story || !language || runStarted} className='w-full' size='lg' onClick={runScript}>
                     Generate Story
                 </Button>
             </section>
@@ -189,7 +207,7 @@ function Writer() {
                     <div>
                         {runFinished === null && (
                             <>
-                                 <p className='animate-pulse mr-5'>I&apos;m waiting... 😒 </p>
+                                <p className='animate-pulse mr-5'>I&apos;m waiting... 😒 </p>
                                 <br />
                             </>
                         )}
