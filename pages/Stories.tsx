@@ -35,7 +35,7 @@ const Stories: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetch('/api/storyCount') // Ensure you have this endpoint or update accordingly
+    fetch('/api/storyCount')
       .then((response) => response.json())
       .then((data) => {
         setStoryCount(data.count);
@@ -71,14 +71,14 @@ const Stories: React.FC = () => {
         {stories.length === 0 ? null : (
           stories.map((story, index) => {
             const contentStartIndex = story.story.indexOf(story.title) + story.title.length;
-            const storyContent = story.story.slice(contentStartIndex, contentStartIndex + 100);
+            const storyContent = story.story.slice(contentStartIndex, contentStartIndex + 150);
             return (
               <div key={index} className="bg-white p-4 shadow-md rounded-md relative">
                 <div className="absolute flex items-center top-0 right-0 bg-purple-500 text-white font-bold p-1 m-2 rounded-lg text-1xl">{story.language}</div>
                 <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
-                <p className="text-gray-700">{storyContent}...</p>
+                <p className="text-gray-700">{cleanTitle(storyContent)}...</p>
                 <Link href={`/story/${cleanTitle(story.title)}`} key={index}>
-                  <Button variant="secondary" className="flex items-center">
+                  <Button variant="secondary" className="flex items-center mt-3  bg-purple-300 font-bold">
                     <BookOpenText className="mr-2" />
                     Read More
                   </Button>

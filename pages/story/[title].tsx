@@ -51,9 +51,11 @@ const StoryDetail: React.FC = () => {
 
     return (
         <main className="flex flex-col items-center justify-center min-h-screen p-8 bg-gray-100">
-            <article className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
+            <article className="bg-purple-100 p-8 rounded-lg shadow-lg max-w-3xl w-full">
                 <h1 className="text-4xl font-bold mb-8">{story.title}</h1>
                 <p className="text-gray-700 whitespace-pre-wrap font-mono font-semibold text-xl" dangerouslySetInnerHTML={{ __html: finalStory }}></p>
+                <hr />
+                <p>*AI Generated</p>
             </article>
         </main>
     );
