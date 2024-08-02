@@ -1,7 +1,6 @@
 import { BookOpen, FilePen } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
-
 function header() {
     return (
         <header className='relative p-16 text-center'>
@@ -12,7 +11,6 @@ function header() {
                     <div className='relative'>
                         <div className='absolute bg-purple-500 -left-2 -top-1 -bottom-1 -right-2 md:-left-3 md:-top-0 md:-bottom-0 md:-right-3 -rotate-2' />
                         <p className='relative text-white'>To life!</p>
-                        {/* </div> */}
                     </div>
                 </div>
             </Link>
