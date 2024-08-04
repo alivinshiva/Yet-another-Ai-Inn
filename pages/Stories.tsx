@@ -3,12 +3,11 @@ import cleanTitle from "@/lib/cleanTitle";
 import Link from 'next/link';
 import { BookOpenText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { HoverEffect } from "@/components/ui/card-hover-effect";
 
 interface Story {
   title: string;
   story: string;
-  language: string; // Include language in the Story interface
+  language: string;
 }
 
 const Stories: React.FC = () => {
@@ -92,3 +91,5 @@ const Stories: React.FC = () => {
 };
 
 export default Stories;
+
+

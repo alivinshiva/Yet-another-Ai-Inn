@@ -83,3 +83,17 @@
     line-height: 2.25rem ;
     color: rgb(126 34 206 / var(--tw-bg-opacity))
   }
+
+  .loader {
+    border-top-color: #3498db;
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -12,6 +12,7 @@ import { Button } from './ui/button';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
 
 const languages = ['Hindi', 'English', 'Spanish', 'French', 'German', 'Italian'];
 
@@ -25,8 +26,20 @@ function Writer() {
     const [response, setResponse] = useState<string>("");
     const [error, setError] = useState<string>('');
     const router = useRouter();
+    const { isSignedIn, userId } = useAuth();
+
+    useEffect(() => {
+        if (!isSignedIn) {
+            router.push('/sign-in');
+        }
+    }, [isSignedIn]);
 
     async function runScript() {
+        if (!isSignedIn) {
+            toast.error("You must be logged in to generate a story.");
+            return;
+        }
+
         setRunStarted(true);
         setRunFinished(false);
         setProgress("AI Storyteller has started...");
@@ -87,7 +100,7 @@ function Writer() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ story, title, language }),
+                body: JSON.stringify({ story, title, language, userId }),
             });
 
             if (response.ok) {
@@ -101,6 +114,11 @@ function Writer() {
     }
 
     async function saveStoryButton() {
+        if (!isSignedIn) {
+            toast.error("You must be logged in to save a story.");
+            return;
+        }
+
         if (response) {
             const title = `${storyTitle}`;
             await saveStory(response, title);

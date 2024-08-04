@@ -3,6 +3,13 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header"
 import { Toaster } from "@/components/ui/sonner";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,13 +24,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider>
+
     <html lang="en">
       <body className='flex flex-col min-h-screen'>
         <Header/>
+        {/* <SignInButton /> */}
         
         {children}
         <Toaster duration={8000} position="bottom-left" />
           </body>
     </html>
+    </ClerkProvider>
   );
 }
