@@ -13,6 +13,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
+import Header from './Header';
 
 const languages = ['Hindi', 'English', 'Spanish', 'French', 'German', 'Italian'];
 
@@ -27,16 +28,36 @@ function Writer() {
     const [error, setError] = useState<string>('');
     const router = useRouter();
     const { isSignedIn, userId } = useAuth();
+    const [credits, setCredits] = useState<number>(3);
 
     useEffect(() => {
         if (!isSignedIn) {
             router.push('/sign-in');
+            return;
         }
-    }, [isSignedIn]);
+
+        // Fetch user credits
+        async function fetchUserCredits() {
+            try {
+                const response = await fetch(`/api/getUserCredits?userId=${userId}`);
+                const data = await response.json();
+                setCredits(data.credits);
+            } catch (error) {
+                console.error('Failed to fetch user credits:', error);
+            }
+        }
+
+        fetchUserCredits();
+    }, [isSignedIn, userId]);
 
     async function runScript() {
         if (!isSignedIn) {
             toast.error("You must be logged in to generate a story.");
+            return;
+        }
+        if (credits <= 0) {
+            toast.error("You have no credits left. Please buy more credits.");
+            router.push('/buy-credits'); // Redirect to buy credits page
             return;
         }
 
@@ -78,6 +99,16 @@ function Writer() {
             setResponse(generatedResponse);
             setRunFinished(true);
             setProgress("Story generation completed.");
+            
+            setCredits(prevCredits => prevCredits - 1);
+
+            await fetch('/api/updateUserCredits', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, credits: credits - 1 }),
+            });
         } catch (err) {
             setError('Error generating response. Please try again.');
             console.error('Error generating response:', err);
@@ -145,6 +176,7 @@ function Writer() {
 
     return (
         <div className='flex flex-col container'>
+            {/* <Header credits={credits} /> */}
             <section className='flex-1 flex flex-col border border-purple-300 rounded-md p-10 space-y-2'>
                 <Textarea
                     value={story}
@@ -178,9 +210,16 @@ function Writer() {
                     </SelectContent>
                 </Select>
 
-                <Button disabled={!pages || !story || !language || runStarted} className='w-full' size='lg' onClick={runScript}>
-                    Generate Story
+                <Button disabled={!pages || !story || !language || runStarted || credits <= 0} className='w-full' size='lg' onClick={runScript}>
+                    {credits > 0 ? 'Generate Story' : 'Buy Credits'}
                 </Button>
+
+                <div className='text-center mt-4'>
+                    <strong className='text-xl text-purple-500'>
+                        {credits}/3
+                    </strong>
+                </div>
+
             </section>
 
             <section className='flex-1 pb-5 mt-5'>
