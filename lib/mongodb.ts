@@ -7,6 +7,6 @@ export async function connectToDatabase() {
 
     await client.connect();
 
-    const db = client.db("your-database-name"); 
+    const db = client.db("ScriptGenAI"); 
     return db;
 }

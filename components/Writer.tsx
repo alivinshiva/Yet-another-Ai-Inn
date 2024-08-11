@@ -13,7 +13,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
-import Header from './Header';
 
 const languages = ['Hindi', 'English', 'Spanish', 'French', 'German', 'Italian'];
 
@@ -36,7 +35,7 @@ function Writer() {
             return;
         }
 
-        // Fetch user credits
+        //user credits
         async function fetchUserCredits() {
             try {
                 const response = await fetch(`/api/getUserCredits?userId=${userId}`);
@@ -57,7 +56,7 @@ function Writer() {
         }
         if (credits <= 0) {
             toast.error("You have no credits left. Please buy more credits.");
-            router.push('/buy-credits'); // Redirect to buy credits page
+            router.push('/Billing');
             return;
         }
 
@@ -99,7 +98,7 @@ function Writer() {
             setResponse(generatedResponse);
             setRunFinished(true);
             setProgress("Story generation completed.");
-            
+
             setCredits(prevCredits => prevCredits - 1);
 
             await fetch('/api/updateUserCredits', {
@@ -176,7 +175,6 @@ function Writer() {
 
     return (
         <div className='flex flex-col container'>
-            {/* <Header credits={credits} /> */}
             <section className='flex-1 flex flex-col border border-purple-300 rounded-md p-10 space-y-2'>
                 <Textarea
                     value={story}
@@ -210,7 +208,18 @@ function Writer() {
                     </SelectContent>
                 </Select>
 
-                <Button disabled={!pages || !story || !language || runStarted || credits <= 0} className='w-full' size='lg' onClick={runScript}>
+                <Button
+                    disabled={credits > 0 && (!pages || !story || !language || runStarted)}
+                    className='w-full'
+                    size='lg'
+                    onClick={() => {
+                        if (credits > 0) {
+                            runScript();
+                        } else {
+                            router.push('/Billing'); //TODO
+                        }
+                    }}
+                >
                     {credits > 0 ? 'Generate Story' : 'Buy Credits'}
                 </Button>
 

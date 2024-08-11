@@ -17,8 +17,6 @@ export default function Home() {
             <Link href='/Stories'> Explore Story Library </Link>
           </Button>
         </div>
-
-        {/* Writer  */}
         <Writer />
       </section>
         <Footer/>

@@ -28,9 +28,7 @@ export default function RootLayout({
 
     <html lang="en">
       <body className='flex flex-col min-h-screen'>
-        <Header/>
-        {/* <SignInButton /> */}
-        
+        <Header/>        
         {children}
         <Toaster duration={8000} position="bottom-left" />
           </body>

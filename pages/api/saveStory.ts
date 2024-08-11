@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     await client.connect();
-    const database = client.db('your-database-name');
+    const database = client.db('ScriptGenAI');
     const stories = database.collection('stories');
 
     const result = await stories.insertOne({ title, story, language, userId, createdAt: new Date() });
@@ -32,3 +32,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await client.close();
   }
 }
+
+

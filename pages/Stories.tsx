@@ -3,22 +3,25 @@ import cleanTitle from "@/lib/cleanTitle";
 import Link from 'next/link';
 import { BookOpenText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { HoverEffect } from "@/components/ui/card-hover-effect";
 
 interface Story {
   title: string;
   story: string;
   language: string;
+  date: string;
 }
 
 const Stories: React.FC = () => {
   const [stories, setStories] = useState<Story[]>([]);
   const [storyCount, setStoryCount] = useState<number>(0);
-
+  const [languageFilter, setLanguageFilter] = useState<string>('');
+  const [dateFilter, setDateFilter] = useState<string>('');
 
   useEffect(() => {
     async function fetchStories() {
       try {
-        const response = await fetch('/api/getStories');
+        const response = await fetch(`/api/getStories?language=${languageFilter}&date=${dateFilter}`);
         if (response.ok) {
           const data = await response.json();
           setStories(data);
@@ -31,7 +34,7 @@ const Stories: React.FC = () => {
     }
 
     fetchStories();
-  }, []);
+  }, [languageFilter, dateFilter]);
 
   useEffect(() => {
     fetch('/api/storyCount')
@@ -46,13 +49,28 @@ const Stories: React.FC = () => {
 
   return (
     <main className="flex-1 flex flex-col p-8">
-      <div className="flex justify-between items-center relative">
-        <h1 className="text-3xl font-bold mb-8">Story Library</h1>
-        <p className="absolute flex items-center top-0 right-0 bg-purple-500 text-white font-bold p-3 rounded-lg m-2 text-1xl">
+      <div className="flex flex-col space-y-4 mb-8">
+        <h1 className="text-3xl font-bold">Story Library</h1>
+        <div className="flex space-x-4 mb-6">
+          <Filter
+            label="Filter by Language"
+            value={languageFilter}
+            onChange={setLanguageFilter}
+            options={['English', 'Hindi', 'Spanish', 'French', 'German', 'Italian']} 
+          />
+          <Filter
+            label="Filter by Date"
+            value={dateFilter}
+            onChange={setDateFilter}
+            options={['Last 7 Days', 'Last 30 Days', 'All Time']} 
+          />
+        </div>
+        <p className="flex items-center bg-purple-500 text-white font-bold p-3 rounded-lg text-xl">
           <BookOpenText className='w-8 h-8 mr-1' />
           {storyCount === 1 ? `${storyCount} Story` : `${storyCount} Stories`}
         </p>
       </div>
+
       {stories.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-24 w-24 text-gray-400 mb-4" viewBox="0 0 20 20" fill="currentColor">
@@ -64,32 +82,44 @@ const Stories: React.FC = () => {
             <Link href='/'> Generate Story </Link>
           </Button>
         </div>
-      ) : null}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      ) : (
+        <HoverEffect items={stories.map(story => ({
+          title: story.title,
+          language: story.language,
+          description: `${cleanTitle(story.story.slice(story.story.indexOf(story.title) + story.title.length, 150))}...`,
+          link: `/story/${cleanTitle(story.title)}`,
+        }))} />
+      )}
+    </main>
+  );
+};
 
-        {stories.length === 0 ? null : (
-          stories.map((story, index) => {
-            const contentStartIndex = story.story.indexOf(story.title) + story.title.length;
-            const storyContent = story.story.slice(contentStartIndex, contentStartIndex + 150);
-            return (
-              <div key={index} className="bg-white p-4 shadow-md rounded-md relative">
-                <div className="absolute flex items-center top-0 right-0 bg-purple-500 text-white font-bold p-1 m-2 rounded-lg text-1xl">{story.language}</div>
-                <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
-                <p className="text-gray-700">{cleanTitle(storyContent)}...</p>
-                <Link href={`/story/${cleanTitle(story.title)}`} key={index}>
-                  <Button variant="secondary" className="flex items-center mt-3  bg-purple-300 font-bold">
-                    <BookOpenText className="mr-2" />
-                    Read More
-                  </Button>
-                </Link>
-              </div>
-            );
-          }))}
-      </div>
-    </main >
+const Filter = ({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: string[];
+}) => {
+  return (
+    <div className="flex flex-col">
+      <label className="mb-2 text-lg font-medium">{label}</label>
+      <select
+        className="border border-gray-300 rounded-lg p-2 bg-white dark:bg-slate-700 dark:border-gray-600"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        <option value="">All</option>
+        {options.map(option => (
+          <option key={option} value={option}>{option}</option>
+        ))}
+      </select>
+    </div>
   );
 };
 
 export default Stories;
-
-
