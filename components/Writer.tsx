@@ -27,7 +27,7 @@ function Writer() {
     const [error, setError] = useState<string>('');
     const router = useRouter();
     const { isSignedIn, userId } = useAuth();
-    const [credits, setCredits] = useState<number>(3);
+    const [credits, setCredits] = useState<number>(5);
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -225,7 +225,7 @@ function Writer() {
 
                 <div className='text-center mt-4'>
                     <strong className='text-xl text-purple-500'>
-                        {credits}/3
+                        {credits}/5
                     </strong>
                 </div>
 

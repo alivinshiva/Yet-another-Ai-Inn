@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (user) {
       res.status(200).json({ credits: user.credits });
     } else {
-      res.status(200).json({ credits: 3 }); // Default credits for new users
+      res.status(200).json({ credits: 5 }); // Default credits for new users
     }
   } catch (error) {
     console.error('Failed to fetch user credits:', error);
