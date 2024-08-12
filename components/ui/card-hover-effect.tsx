@@ -124,7 +124,7 @@ export const CardLanguage = ({
   return (
     <p
       className={cn(
-        "absolute flex items-center top-0 right-0 bg-purple-500 text-white font-bold p-1 m-2 rounded-lg text-1xl",
+        "absolute flex items-center bottom-0 right-0 bg-purple-500 text-white font-bold p-1 m-2 rounded-lg text-1xl",
         className
       )}
     >
