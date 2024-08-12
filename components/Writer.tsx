@@ -225,7 +225,7 @@ function Writer() {
 
                 <div className='text-center mt-4'>
                     <strong className='text-xl text-purple-500'>
-                        {credits}/5
+                        {credits} Credit Left
                     </strong>
                 </div>
 
