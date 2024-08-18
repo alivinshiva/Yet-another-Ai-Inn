@@ -127,13 +127,10 @@ const Footer: React.FC = () => {
                 8. Refunds<br />
                 Refunds are only provided if no purchased credits have been used. Once credits are utilized, no refund will be issued. For more details, please refer to our Refund Policy.<br /><br />
 
-                9. Limitation of Liability<br />
-                Script Gen AI is provided on an "as is" and "as available" basis. We make no warranties or representations regarding the accuracy, reliability, or availability of the service. To the fullest extent permitted by law, Script Gen AI shall not be liable for any damages resulting from your use of the service.<br /><br />
-
-                10. Changes to Terms<br />
+                9. Changes to Terms<br />
                 We reserve the right to update or modify these terms at any time. Any changes will be effective immediately upon posting. Your continued use of Script Gen AI after the changes have been posted constitutes your acceptance of the new terms.<br /><br />
 
-                11. Contact Us<br />
+                10. Contact Us<br />
                 If you have any questions or concerns about these Terms and Conditions, please contact us at <br />
                 <hr />
                 Mail: alivin612003@gmail.com <br />

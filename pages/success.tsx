@@ -51,7 +51,7 @@
 
 
 // dynamically update user credits by clerk
-import { useEffect } from 'react';
+import { useEffect, } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useAuth } from '@clerk/nextjs'; // Import Clerk's useAuth hook
