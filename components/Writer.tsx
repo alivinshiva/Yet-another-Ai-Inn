@@ -62,7 +62,7 @@ function Writer() {
 
         setRunStarted(true);
         setRunFinished(false);
-        setProgress("AI Storyteller has started...");
+        setProgress("Shaping your story...");
         const apiKey = process.env.NEXT_PUBLIC_API as string;
         const genAI = new GoogleGenerativeAI(apiKey);
 
@@ -225,7 +225,7 @@ function Writer() {
 
                 <div className='text-center mt-4'>
                     <strong className='text-xl text-purple-500'>
-                        {credits}/5
+                        {credits} Credit Left
                     </strong>
                 </div>
 
