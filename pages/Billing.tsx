@@ -38,9 +38,9 @@ const BillingPage: React.FC = () => {
                     <p className="text-4xl font-extrabold text-gray-900 mb-2">599₹<span className="text-xl font-normal"> /year</span></p>
                     <ul className="mt-4 mb-6 space-y-2 text-left">
                         <li className="text-sm">✔ 300 Credits</li>
-                        <li className="text-sm">✔ 50+ Template Access</li>
+                        {/* <li className="text-sm">✔ 50+ Template Access</li> */}
                         <li className="text-sm">✔ All Language</li>
-                        <li className="text-sm">✔ Unlimited Download</li>
+                        <li className="text-sm">✔ Unlimited Download (Comming soon)</li>
                         <li className="text-sm">✔ 1 Year of History</li>
                     </ul>
                     <button className="relative w-full">
