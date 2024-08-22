@@ -5,7 +5,7 @@ const BillingPage: React.FC = () => {
         
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/payment-button.js';
-        script.setAttribute('data-payment_button_id', 'pl_OjBVyjIIdh3Wfa');
+        script.setAttribute('data-payment_button_id', 'pl_Ok6NY09AfiuO69');
         script.async = true;
         const form = document.getElementById('razorpay-payment-form');
         if (form) {
